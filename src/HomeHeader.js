@@ -17,6 +17,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '20px',
+    margin: '20px',
     backgroundColor: '#493856',
     color: '#fff',
     
