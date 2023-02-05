@@ -1,0 +1,116 @@
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+
+
+const parks = [
+  { name: "High Park", location: "Toronto, ON", id: 1 },
+  { name: "Trinity Bellwoods Park", location: "Toronto, ON", id: 2 },
+  { name: "Riverdale Park", location: "Toronto, ON", id: 3 },
+  { name: "Guild Park and Gardens", location: "Toronto, ON", id: 4 },
+  { name: "Centennial Park", location: "Toronto, ON", id: 5 },
+  { name: "Cedarvale Park", location: "Toronto, ON", id: 6 },
+  { name: "Rouge National Urban Park", location: "Toronto, ON", id: 7 },
+  { name: "Tommy Thompson Park", location: "Toronto, ON", id: 8 },
+  { name: "Grenadier Pond", location: "Toronto, ON", id: 9 },
+  { name: "James Gardens", location: "Toronto, ON", id: 10 },
+  { name: "Mimico Waterfront Park", location: "Toronto, ON", id: 11 },
+];
+
+function ParkList(props) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [parksPerPage] = useState(4);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleClick = (event) => {
+    setCurrentPage(Number(event.target.id));
+  };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredParks = parks.filter((park) =>
+    park.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleViewClick = (id) => {
+    history.push(`/park/${id}`);
+  };
+
+  const indexOfLastPark = currentPage * parksPerPage;
+  const indexOfFirstPark = indexOfLastPark - parksPerPage;
+  const currentParks = filteredParks.slice(indexOfFirstPark, indexOfLastPark);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredParks.length / parksPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <div className="bg-white p-8 rounded-md w-full">
+      <div className="flex items-center justify-between pb-6">
+        <div>
+          <h2 className="text-gray-600 font-semibold">Park List</h2>
+          <span className="text-xs">All Parks</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="flex bg-gray-50 items-center p-2 rounded-md">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8 4a6 6 0 100 12 6 6 0 000-12zM2 8a6 6 0 0110.89
+          -2.012l4.511 4.51a1 1 0 010 1.414l-4.511 4.51C6.62
+          18.964 5.068 18 2 18A6 6 0 012 8z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search Park"
+              className="px-3 py-2 bg-gray-50 rounded-md w-64"
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        {currentParks.map((park) => (
+          <div
+            key={park.id}
+            className="p-4 my-4 bg-white rounded-md shadow-md hover:shadow-lg"
+          >
+            <h3 className="text-gray-600 font-medium">{park.name}</h3>
+            <p className="text-gray-500 text-xs">{park.location}</p>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full float-right"
+              onClick={() => handleViewClick(park.id)}
+            >
+              View
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center mt-8">
+        <ul className="pagination flex justify-center">
+          {pageNumbers.map((number) => (
+            <li
+              key={number}
+              id={number}
+              onClick={handleClick}
+              className="inline-block mx-2 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full cursor-pointer"
+            >
+              {number}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default ParkList;
