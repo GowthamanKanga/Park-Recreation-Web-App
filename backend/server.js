@@ -31,7 +31,7 @@ app.use("/",ticketRouter)
 app.use(cors())
 
 mongoose.Promise = global.Promise
-mongoose.connect("mongodb+srv://capstone:Capstone2023@cluster0.vaju5po.mongodb.net/webapp?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://<Name>:<Password>@cluster0.vaju5po.mongodb.net/webapp?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
