@@ -73,26 +73,6 @@ route.get('/amenities/:id', async(req, res) => {
 });
 
 
-route.patch('/amenities/:id', async(req, res) => {
-
-    let id = req.params.id
-    if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
-        return res.status(400).send({
-            message: "Facilities's content can not be empty"
-        });
-    }
-    else {
-    try {
-        console.log(req.body)
-        const updatedInventory = await equipment.findByIdAndUpdate(id, req.body)
-    
-        await updatedInventory.save()
-        res.status(202).send(updatedInventory)
-      } catch (err) {
-        res.status(500).send(err)
-      }
-    }
-});
 
 route.patch('/amentities/:id', async (req, res) => {
     try {
