@@ -113,7 +113,7 @@ route.get('/events/:id', async(req, res) => {
 });
 
 
-route.put('/events/:id', async(req, res) => {
+route.patch('/events/:id', async(req, res) => {
 
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {

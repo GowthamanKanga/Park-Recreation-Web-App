@@ -73,7 +73,7 @@ route.get('/parks/:id', async(req, res) => {
 });
 
 
-route.put('/parks/:id', async(req, res) => {
+route.patch('/parks/:id', async(req, res) => {
 
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
