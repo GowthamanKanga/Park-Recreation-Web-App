@@ -34,7 +34,7 @@ const ParkMap = ({ google }) => {
       <body className="bg-white">
         <nav className="fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-white py-2.5 px-6 sm:px-4">
           <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between">
-            <a href="#" className="flex items-center">
+            <a href="/Home" className="flex items-center">
               <span className="self-center whitespace-nowrap text-xl font-semibold">
                 GBC Park & Recreation
               </span>
@@ -81,7 +81,7 @@ const ParkMap = ({ google }) => {
               <ul className="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:text-sm md:font-medium">
                 <li>
                   <a
-                    href="#"
+                    href="/Home"
                     className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white md:bg-transparent md:p-0 md:text-blue-700"
                     aria-current="page"
                   >
@@ -90,7 +90,7 @@ const ParkMap = ({ google }) => {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="ParkList"
                     className="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
                   >
                     Park List
@@ -110,7 +110,7 @@ const ParkMap = ({ google }) => {
         <div className="flex flex-wrap items-center  overflow-x-auto overflow-y-hidden py-10 justify-center   bg-white text-gray-800">
           <a
             rel="noopener noreferrer"
-            href="#"
+            href="/ParkHome"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2text-gray-600"
           >
             <svg
@@ -129,7 +129,7 @@ const ParkMap = ({ google }) => {
           </a>
           <a
             rel="noopener noreferrer"
-            href="#"
+            href="/FacilityList"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2 rounded-t-lg text-gray-900"
           >
             <svg
@@ -149,7 +149,7 @@ const ParkMap = ({ google }) => {
           </a>
           <a
             rel="noopener noreferrer"
-            href="#"
+            href="/BookingPage"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
           >
             <svg
@@ -168,7 +168,7 @@ const ParkMap = ({ google }) => {
           </a>
           <a
             rel="noopener noreferrer"
-            href="#"
+            href="/EventList"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
           >
             <svg
@@ -188,7 +188,7 @@ const ParkMap = ({ google }) => {
           </a>
           <a
             rel="noopener noreferrer"
-            href="#"
+            href="ChatForum"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
           >
             <svg
@@ -208,7 +208,7 @@ const ParkMap = ({ google }) => {
           </a>
           <a
             rel="noopener noreferrer"
-            href="#"
+            href="ParkMap"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
           >
             <svg
