@@ -31,7 +31,7 @@ route.get('/amenities', async(req, res) => {
         res.status(500).send(error)
     }
 });
-route.get('/amenities/', async(req, res) => {
+route.get('/amenities/search', async(req, res) => {
     let keyword = req.query.keyword
 
     if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
