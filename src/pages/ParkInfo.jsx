@@ -1,52 +1,10 @@
-import React, { useState } from "react";
-import BookingForm from "./BookingForm";
-const mockData = [
-  {
-    id: 1,
-    name: "Playground",
-    location: "Area 1",
-    image: "https://via.placeholder.com/150",
-    description:
-      "A playground with swings, slides and monkey bars for children to play on.",
-  },
-  {
-    id: 2,
-    name: "Tennis Court",
-    location: "Area 2",
-    image: "https://via.placeholder.com/150",
-    description: "A full-size tennis court with lights for evening play.",
-  },
-  {
-    id: 3,
-    name: "Basketball Court",
-    location: "Area 3",
-    image: "https://via.placeholder.com/150",
-    description: "A regulation-size basketball court with adjustable hoops.",
-  },
-  {
-    id: 4,
-    name: "Soccer Court",
-    location: "Area 4",
-    image: "https://via.placeholder.com/150",
-    description: "A regulation-size basketball court with adjustable hoops.",
-  },
-];
+import React from "react";
+import centreIslandPier from "../images/centre-island-pier.png";
 
-function FacilityList() {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedFacility, setSelectedFacility] = useState({});
-  const [bookingForm, SetBookingPage] = useState("");
-
-  const onClose = () => SetBookingPage(false);
-  const handleView = (facility) => {
-    setSelectedFacility(facility);
-    setShowModal(true);
-  };
-
+const Main = () => {
   return (
-    <div>
-      <BookingForm visible={bookingForm} Onclose={onClose} />
-      <body className="bg-white">
+    <>
+        <body className="bg-white">
         <nav className="fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-white py-2.5 px-6 sm:px-4">
           <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between">
             <a href="/Home" className="flex items-center">
@@ -118,7 +76,7 @@ function FacilityList() {
 
         <div className="pt-32  bg-white">
           <h1 className="text-center text-2xl font-bold text-gray-800">
-            Facility List
+            Park Main Page
           </h1>
         </div>
 
@@ -144,7 +102,7 @@ function FacilityList() {
           </a>
           <a
             rel="noopener noreferrer"
-            href="FacilityList"
+            href="/FacilityList"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2 rounded-t-lg text-gray-900"
           >
             <svg
@@ -242,98 +200,74 @@ function FacilityList() {
             <span>Map</span>
           </a>
         </div>
-        <body>
-          <div class="h-screen bg-gray-100 pt-20">
-            <div class="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
-              <div class="rounded-lg md:w-2/3 flex flex-col">
-                {mockData.map((data) => {
-                  return (
-                    <div class="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
-                      <img
-                        src={data.image}
-                        alt="product-image"
-                        class="w-full rounded-lg sm:w-40"
-                      />
-                      <div class="sm:ml-4 sm:flex sm:w-full sm:justify-between">
-                        <div class="mt-5 sm:mt-0">
-                          <h2 class="text-lg font-bold text-gray-900">
-                            {data.name}
-                          </h2>
-                          <p class="mt-1 text-xs text-gray-700">
-                            {data.location}
-                          </p>
-                          <p class="mt-1 text-xs text-gray-700">
-                            {data.description}
-                          </p>
-                        </div>
-                        <div class="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
-                          <div class="flex items-center border-gray-100 flex-col">
-                            <div className="flex items-center rounded-lg bg-blue-500 px-4 py-1.5 text-white duration-100 hover:bg-blue-600 mb-2">
-                              <button onClick={() => handleView(data)}>
-                                View
-                              </button>
-                            </div>
-                            <div className="flex items-center rounded-lg bg-blue-500 px-4 py-1.5 text-white duration-100 hover:bg-blue-600">
-                              <button
-                                onClick={() => SetBookingPage(true)}
-                                className="text-sm mx-2"
-                              >
-                                Booking
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+      </body>
+      <div
+        className="bg-cover bg-center h-64 w-full"
+        style={{ backgroundImage: `url(${centreIslandPier})` }}
+      >
+        <div className="container mx-auto h-full flex items-center justify-center">
+          <h1 className="text-white text-5xl font-bold leading-tight">
+            Toronto Island Park
+          </h1>
+        </div>
+      </div>
+      <div className="container mx-auto p-10">
+        <div className="flex flex-wrap">
+          <div className="w-full md:w-1/2 p-10">
+            <div className="bg-white p-10 rounded-lg shadow-lg">
+              <h2 className="text-3xl font-bold mb-5">About Us</h2>
+              <p className="text-gray-600 text-lg leading-relaxed mb-10">
+                The Toronto Islands provide a great, refreshing escape from
+                downtown with a beautiful view of Lake Ontario on one side, and
+                the city skyline on the other. The park offers a range of
+                activities, including biking, picnicking, and beach-going. It's
+                the perfect place to relax and enjoy the sunshine on a hot
+                summer day, or take in the stunning views of the city and lake
+                in the evening. Whether you're a local or just visiting, Toronto
+                Island Park is definitely worth checking out.
+              </p>
             </div>
           </div>
-
-          {showModal && (
-            <Modal onClose={() => setShowModal(false)}>
-              <div className="p-10 bg-white rounded">
-                <h2 className="text-xl font-bold text-gray-900">
-                  {selectedFacility.name}
-                </h2>
-                <img
-                  src={selectedFacility.image}
-                  alt="facility-image"
-                  className="w-full rounded-lg"
-                />
-
-                <p className="text-sm text-gray-700 mt-4">
-                  {selectedFacility.location}
-                </p>
-                <p className="text-sm text-gray-700 mt-2">
-                  {selectedFacility.description}
-                </p>
-                <ul className="mt-2"></ul>
-              </div>
-            </Modal>
-          )}
-        </body>
-      </body>
-    </div>
-  );
-}
-const Modal = ({ onClose, children }) => {
-  return (
-    <div className="fixed top-0 left-0 w-full h-full bg-300 backdrop-blur-sm flex items-center justify-center">
-      <div className="relative w-full max-w-sm">
-        <div className="absolute top-0 right-0">
-          <button
-            className="text-white bg-red-500 rounded-sm py-1 px-3"
-            onClick={onClose}
-          >
-            X
-          </button>
+          <div className="w-full md:w-1/2 p-10">
+            <div className="bg-white p-10 rounded-lg shadow-lg">
+              <h2 className="text-3xl font-bold mb-5">Contact Information</h2>
+              <p className="text-gray-600 text-lg mb-3">
+                First/Lost Children/Lost Parent
+              </p>
+              <p className="text-gray-600 text-lg mb-3">
+                Station Lost and Found
+              </p>
+              <p className="text-gray-600 text-lg mb-3">Centre Island</p>
+              <p className="text-gray-600 text-lg mb-3">Near the ferry dock</p>
+              <p className="text-gray-600 text-lg mb-3">May to September</p>
+              <p className="text-gray-600 text-lg mb-10">10:30 am to 5:30 pm</p>
+              <p className="text-gray-600 text-lg mb-10">
+                Some wheelchairs are available to use for free on a first come,
+                first served basis. Government-issued ID is required.
+              </p>
+            </div>
+          </div>
         </div>
-        {children}
+        <div className="flex flex-wrap">
+          <div className="w-full p-10">
+            <div
+              className="bg-
+
+white p-10 rounded-lg shadow-lg"
+            >
+              <h2 className="text-3xl font-bold mb-5">Location</h2>
+              <p className="text-gray-600 text-lg leading-relaxed mb-10">
+                Toronto Island Park is located in Toronto, Ontario, Canada. It
+                is accessible by ferry from the mainland and is a popular
+                destination for locals and tourists alike. The park is a short
+                ferry ride from the heart of the city and offers a relaxing
+                escape from the hustle and bustle of downtown.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
-
-export default FacilityList;
+export default Main;

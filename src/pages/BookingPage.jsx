@@ -1,16 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 //import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg';
 //import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg';
 //import { ReactComponent as Logo } from '../assets/logo.svg';
 //import {ReactComponent as ArrowRight} from "../images/arrow-right.svg"
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, Navigate } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { moment } from "moment";
+import Swal from "sweetalert2";
 
+require("dotenv").config()
+
+console.log(process.env.ATLAS_URI)
+
+const bookingId = localStorage.getItem("bookingId")
+
+
+ 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
 };
+
+
 
 const localizer = dateFnsLocalizer({
   format,
@@ -45,6 +56,62 @@ const events = [
 ];
 
 const Bookings = () => {
+
+  const [bookingId, SetBookingId] = useState("");
+  const [bookingName, SetBookingName] = useState("");
+  const [bookingFacility, SetBookingFacility] = useState("");
+  const [bookingStartTime, SetBookingStartTime] = useState("");
+  const [bookingEndTime, SetBookingEndTime] = useState("");
+  const [bookingTitle, SetBookingTitle] = useState("");
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/BookingPage/${bookingId}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+        method: "GET",
+        mode: "cors",
+      })
+      if (res.status != 200){
+        {
+          setTimeout(() => {
+            Swal.fire({
+              title: "Time out",
+              text: "Booking Confirmed ! Book Again",
+              icon: "error",
+              confirmButtonText: "ok",
+            })
+            navigate("BookingPage")("false")
+          }, 2000)
+        }
+      }
+      const resp = await res.json();
+      console.log(resp);
+
+      const {
+        bookingId,
+        bookingName,
+        bookingFacility,
+        bookingStartTime,
+        bookingEndTime,
+        bookingTitle,
+      } = resp;
+      SetBookingId(bookingId);
+      SetBookingName(bookingName);
+      SetBookingFacility(bookingFacility);
+      SetBookingStartTime(bookingStartTime);
+      SetBookingEndTime(bookingEndTime);
+      SetBookingTitle(bookingTitle);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  
+    }
+  }
+
   return (
     <div>
       <div>
@@ -334,7 +401,6 @@ const Bookings = () => {
             </form>
           </div>
         </div>
-        <div></div>
       </div>
       <div>
         <Calendar
@@ -345,38 +411,6 @@ const Bookings = () => {
           style={{ height: 500, margin: "100px" }}
         />
       </div>
-      {/* <Calendar/> */}
-      {/* <div class="container mx-auto px-4 py-2 md:pb-16">
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="flex items-center justify-between py-2 px-6">
-                        <div>
-                            <span class="text-lg font-bold text-gray-800">February</span>
-                            <span class="ml-1 text-lg text-gray-600 font-normal">2023</span>
-                        </div>
-                        <div>
-                            <button type="button" class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center prev">
-                                <ArrowLeft class="h-8 w-8"/>
-                            </button>
-                            <button type="button" class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center next">
-                                <ArrowRight class="h-8 w-8"/>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="-mx-1 -mb-1">
-                        <div class="flex flex-wrap text-center font-bold border-t border-l weekdays">
-                            <div class="w-[14.28%] px-2 py-2 border-r">SUNDAY</div>
-                            <div class="w-[14.28%] px-2 py-2 border-r">MONDAY</div>
-                            <div class="w-[14.28%] px-2 py-2 border-r">TUESDAY</div>
-                            <div class="w-[14.28%] px-2 py-2 border-r">WEDNESDAY</div>
-                            <div class="w-[14.28%] px-2 py-2 border-r">THURSDAY</div>
-                            <div class="w-[14.28%] px-2 py-2 border-r">FRIDAY</div>
-                            <div class="w-[14.28%] px-2 py-2">SATURDAY</div>
-                        </div>
-                        <div class="flex flex-wrap border-t border-l days">
-                        </div>
-                    </div>
-                </div>
-            </div> */}
     </div>
   );
 };
