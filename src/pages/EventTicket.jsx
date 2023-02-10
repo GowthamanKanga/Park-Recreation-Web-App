@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCallback } from 'react';
 import Swal from "sweetalert2";
 
 export default function EventTicket({ visible, Onclose }) {
   const [formOpen, setFormOpen] = useState(true);
 
   const [response, setResponse] = useState("");
-
+  const [first_name, setfirst_name] = useState("");
+  const [last_name, setlast_name] = useState("");
+  const [event_date, setEvent_date] = useState("")
+  const [event_time, setEvent_time] = useState("")
+  const [number_OfTicket, setNumber_OfTicket] = useState("")
   
   const TicketID = localStorage.getItem("TicketID");
 
@@ -36,10 +41,17 @@ export default function EventTicket({ visible, Onclose }) {
       console.log(resp)
 
       const {
-
-        ticketForm, 
+        first_name,
+        last_name,
+        event_date,
+        event_time,
+        number_OfTicket,
       } = resp;
-      SetTicketForm(ticketForm)
+      setfirst_name(first_name)
+      setlast_name(last_name)
+      setEvent_date(event_date)
+      setEvent_time(event_time)
+      setNumber_OfTicket(number_OfTicket)
     }catch(err) {
       console.log(err.mess)
     }
@@ -56,7 +68,12 @@ export default function EventTicket({ visible, Onclose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = {
-      ticketForm,
+      first_name,
+      last_name,
+      event_date,
+      event_time,
+      number_OfTicket,
+
     };
 
     try {
@@ -97,15 +114,16 @@ export default function EventTicket({ visible, Onclose }) {
                 <div class="w-full px-3 sm:w-1/2">
                   <div class="mb-5">
                     <label
-                      for="fName"
+                      for="first_name"
                       class="mb-3 block text-base font-medium text-[#07074D]"
                     >
                       First Name
                     </label>
                     <input
                       type="text"
-                      name="fName"
-                      id="fName"
+                      name="first_name"
+                      id="first_name"
+                      value={first_name}
                       placeholder="First Name"
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
@@ -114,15 +132,16 @@ export default function EventTicket({ visible, Onclose }) {
                 <div class="w-full px-3 sm:w-1/2">
                   <div class="mb-5">
                     <label
-                      for="lName"
+                      for="last_name"
                       class="mb-3 block text-base font-medium text-[#07074D]"
                     >
                       Last Name
                     </label>
                     <input
                       type="text"
-                      name="lName"
-                      id="lName"
+                      name="last_name"
+                      id="last_name"
+                      value={last_name}
                       placeholder="Last Name"
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
@@ -138,8 +157,9 @@ export default function EventTicket({ visible, Onclose }) {
                 </label>
                 <input
                   type="number"
-                  name="ticket"
-                  id="ticket"
+                  name="number_OfTicket"
+                  id="number_OfTicket"
+                  value={number_OfTicket}
                   placeholder="5"
                   min="0"
                   class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -150,15 +170,16 @@ export default function EventTicket({ visible, Onclose }) {
                 <div class="w-full px-3 sm:w-1/2">
                   <div class="mb-5">
                     <label
-                      for="date"
+                      for="event_date"
                       class="mb-3 block text-base font-medium text-[#07074D]"
                     >
                       Date
                     </label>
                     <input
-                      type="date"
-                      name="date"
-                      id="date"
+                      type="event_date"
+                      name="event_date"
+                      id="event_date"
+                      value={event_date}
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
                   </div>
@@ -166,15 +187,16 @@ export default function EventTicket({ visible, Onclose }) {
                 <div class="w-full px-3 sm:w-1/2">
                   <div class="mb-5">
                     <label
-                      for="time"
+                      for="event_time"
                       class="mb-3 block text-base font-medium text-[#07074D]"
                     >
                       Time
                     </label>
                     <input
-                      type="time"
-                      name="time"
-                      id="time"
+                      type="event_time"
+                      name="event_time"
+                      id="event_time"
+                      value={event_time}
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
                   </div>
