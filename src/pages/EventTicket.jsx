@@ -1,7 +1,90 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function EventTicket({ visible, Onclose }) {
   const [formOpen, setFormOpen] = useState(true);
+
+  const [response, setResponse] = useState("");
+
+  
+  const TicketID = localStorage.getItem("TicketID");
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/EventList/${TicketID}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+        method: "GET",
+        mode: "cors",
+      })
+      if (res.status != 200) {
+        {
+          setTimeout(() => {
+            Swal.fire({
+              title: "Time Out",
+              text: "Ticket Purchase Time Out ! Repurchase Ticket",
+              icon: "error",
+              confirmButtonText: "ok",
+            })
+            navigate("/EventList")("false")
+          },2000)
+        }
+      }
+      const resp = await res.json();
+      console.log(resp)
+
+      const {
+
+        ticketForm, 
+      } = resp;
+      SetTicketForm(ticketForm)
+    }catch(err) {
+      console.log(err.mess)
+    }
+  }
+
+  const callback = useCallback(() => fetchData(), [TicketID])
+
+  useEffect(() => {
+    callback()
+  }, [callback])
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userData = {
+      ticketForm,
+    };
+
+    try {
+       const res = await fetch(`http://localhost/EventList/update${TicketID}`, {
+       method: "PUT", 
+       header: {
+          "content-type" : "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify(userData),
+       })
+       console.log(res);
+      if (res.status == 200) {
+        setResponse("true")
+        {
+          setTimeout(() => {
+            setResponse("false")
+          }, 1500)
+        }
+       }
+      
+
+       console.log(res.formData)
+    } 
+    catch(err) {
+      console.log(err.message)
+    }
+  }
 
   if (!visible) return null;
   return (

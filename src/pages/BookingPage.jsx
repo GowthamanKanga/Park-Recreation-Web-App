@@ -87,7 +87,7 @@ const Bookings = () => {
           setTimeout(() => {
             Swal.fire({
               title: "Time out",
-              text: "Booking Confirmed ! Book Again",
+              text: "Booking Error ! Book Again",
               icon: "error",
               confirmButtonText: "ok",
             });
