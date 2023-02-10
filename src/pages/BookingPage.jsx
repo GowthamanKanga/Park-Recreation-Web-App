@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 //import { ReactComponent as ArrowRight } from '../assets/arrow-right.svg';
 //import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg';
 //import { ReactComponent as Logo } from '../assets/logo.svg';
@@ -9,19 +11,9 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { moment } from "moment";
 import Swal from "sweetalert2";
 
-require("dotenv").config()
-
-console.log(process.env.ATLAS_URI)
-
-const bookingId = localStorage.getItem("bookingId")
-
-
- 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
 };
-
-
 
 const localizer = dateFnsLocalizer({
   format,
@@ -55,25 +47,42 @@ const events = [
   },
 ];
 
-const Bookings = () => {
+const mockData = [
+  { name: "Facility 1" },
+  { name: "Facility 2" },
+  { name: "Facility 3" },
+  { name: "Facility 4" },
+];
 
-  const [bookingId, SetBookingId] = useState("");
-  const [bookingName, SetBookingName] = useState("");
-  const [bookingFacility, SetBookingFacility] = useState("");
-  const [bookingStartTime, SetBookingStartTime] = useState("");
-  const [bookingEndTime, SetBookingEndTime] = useState("");
-  const [bookingTitle, SetBookingTitle] = useState("");
+const Bookings = () => {
+  const [bookingNumber, SetBookingNumber] = useState("");
+  const [facility, setFacility] = useState("");
+  const [user, SetUser] = useState("");
+  const [booking_date, SetBookingDate] = useState("");
+  const [amount_of_guests, SetAmountOfGuests] = useState("");
+  const [start_time, SetStartTime] = useState("");
+  const [end_time, SetEndTime] = useState("");
+  const [response, setResponse] = useState("");
+
+  const handleChange = (event) => {
+    setFacility(event.target.value);
+  };
+
+  const bookingId = localStorage.getItem("bookingId");
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/BookingPage/${bookingId}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-        method: "GET",
-        mode: "cors",
-      })
-      if (res.status != 200){
+      const res = await fetch(
+        `http://localhost:3003/BookingPage/${bookingId}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+          method: "GET",
+          mode: "cors",
+        }
+      );
+      if (res.status != 200) {
         {
           setTimeout(() => {
             Swal.fire({
@@ -81,36 +90,82 @@ const Bookings = () => {
               text: "Booking Confirmed ! Book Again",
               icon: "error",
               confirmButtonText: "ok",
-            })
-            navigate("BookingPage")("false")
-          }, 2000)
+            });
+            navigate("BookingPage")("false");
+          }, 2000);
         }
       }
       const resp = await res.json();
       console.log(resp);
 
       const {
-        bookingId,
-        bookingName,
-        bookingFacility,
-        bookingStartTime,
-        bookingEndTime,
-        bookingTitle,
+        bookingNumber,
+        facility,
+        user,
+        booking_date,
+        amount_of_guests,
+        start_time,
+        end_time,
       } = resp;
-      SetBookingId(bookingId);
-      SetBookingName(bookingName);
-      SetBookingFacility(bookingFacility);
-      SetBookingStartTime(bookingStartTime);
-      SetBookingEndTime(bookingEndTime);
-      SetBookingTitle(bookingTitle);
+      SetBookingNumber(bookingNumber);
+      SetUser(user);
+      setFacility(facility);
+      SetBookingDate(booking_date);
+      SetAmountOfGuests(amount_of_guests);
+      SetStartTime(start_time);
+      SetEndTime(end_time);
     } catch (err) {
       console.log(err.message);
     }
   };
 
-  
+  const callback = useCallback(() => fetchData(), [bookingNumber]);
+
+  useEffect(() => {
+    callback();
+  }, [callback]);
+
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userData = {
+      bookingNumber,
+      user,
+      facility,
+      booking_date,
+      amount_of_guests,
+      start_time,
+      end_time,
+    };
+
+    try {
+      const res = await fetch(
+        `http://localhost:3003/BookingPage/update/${bookingId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+      console.log(res);
+      if (res.status == 200) {
+        setResponse("true");
+        {
+          setTimeout(() => {
+            setResponse("false");
+          }, 1500);
+        }
+      }
+
+      console.log(res.formData);
+      // alert('Saved successfully.');
+    } catch (err) {
+      console.log(err.message);
     }
-  }
+  };
 
   return (
     <div>
@@ -118,7 +173,7 @@ const Bookings = () => {
         <body className="bg-white">
           <nav className="fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-white py-2.5 px-6 sm:px-4">
             <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between">
-              <a href="#" className="flex items-center">
+              <a href="/Home" className="flex items-center">
                 <span className="self-center whitespace-nowrap text-xl font-semibold">
                   GBC Park & Recreation
                 </span>
@@ -151,9 +206,9 @@ const Bookings = () => {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </button>
@@ -165,7 +220,7 @@ const Bookings = () => {
                 <ul className="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:text-sm md:font-medium">
                   <li>
                     <a
-                      href="#"
+                      href="/Home"
                       className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white md:bg-transparent md:p-0 md:text-blue-700"
                       aria-current="page"
                     >
@@ -174,7 +229,7 @@ const Bookings = () => {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/ParkList"
                       className="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
                     >
                       Park List
@@ -194,7 +249,7 @@ const Bookings = () => {
           <div className="flex flex-wrap items-center  overflow-x-auto overflow-y-hidden py-10 justify-center   bg-white text-gray-800">
             <a
               rel="noopener noreferrer"
-              href="#"
+              href="/ParkInfo"
               className="flex items-center flex-shrink-0 px-5 py-3 space-x-2text-gray-600"
             >
               <svg
@@ -202,7 +257,7 @@ const Bookings = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 className="w-4 h-4"
@@ -213,7 +268,7 @@ const Bookings = () => {
             </a>
             <a
               rel="noopener noreferrer"
-              href="#"
+              href="/FacilityList"
               className="flex items-center flex-shrink-0 px-5 py-3 space-x-2 rounded-t-lg text-gray-900"
             >
               <svg
@@ -221,7 +276,7 @@ const Bookings = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 className="w-4 h-4"
@@ -233,7 +288,7 @@ const Bookings = () => {
             </a>
             <a
               rel="noopener noreferrer"
-              href="#"
+              href="/Booking"
               className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
             >
               <svg
@@ -241,7 +296,7 @@ const Bookings = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 className="w-4 h-4"
@@ -252,7 +307,7 @@ const Bookings = () => {
             </a>
             <a
               rel="noopener noreferrer"
-              href="#"
+              href="EventList"
               className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
             >
               <svg
@@ -260,7 +315,7 @@ const Bookings = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 className="w-4 h-4"
@@ -272,7 +327,7 @@ const Bookings = () => {
             </a>
             <a
               rel="noopener noreferrer"
-              href="#"
+              href="/ChatForum"
               className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
             >
               <svg
@@ -280,7 +335,7 @@ const Bookings = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 className="w-4 h-4"
@@ -292,7 +347,7 @@ const Bookings = () => {
             </a>
             <a
               rel="noopener noreferrer"
-              href="#"
+              href="/ParkMap"
               className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
             >
               <svg
@@ -300,7 +355,7 @@ const Bookings = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 className="w-4 h-4"
@@ -345,15 +400,14 @@ const Bookings = () => {
                 <select
                   class="w-full rounded-md border border-[] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#2f3d44] focus:shadow-md"
                   id="facility"
+                  value={facility}
+                  onChange={handleChange}
                 >
-                  <option selected hidden>
-                    -- Select Facility --
-                  </option>
-                  <option>Picnic Pavilion</option>
-                  <option value="defaultOption">Beach Firepit</option>
-                  <option>Petting Zoo</option>
-                  <option>Splash Pad</option>
-                  <option>Hedge Maze</option>
+                  {mockData.map((facilityOption, index) => (
+                    <option key={index} value={facilityOption.name}>
+                      {facilityOption.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div class="mb-5">
