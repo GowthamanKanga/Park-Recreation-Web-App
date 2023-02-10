@@ -194,7 +194,7 @@ function ChatForum() {
           </a>
           <a
             rel="noopener noreferrer"
-            href="/Booking"
+            href="/BookingPage"
             className="flex items-center flex-shrink-0 px-5 py-3 space-x-2  text-gray-600"
           >
             <svg

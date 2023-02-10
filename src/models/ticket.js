@@ -32,7 +32,7 @@ const ticketSchema = new mongoose.Schema({
         default: Date.now
     },
 
-    ticket_amount: {
+    number_OfTicket: {
         type: Number,
         required: true,
 

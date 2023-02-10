@@ -1,57 +1,49 @@
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const bookingRouter = require("./routes/bookingRoutes");
-const facilityRouter = require("./routes/amentityRoutes");
-const eventRouter = require("./routes/eventRoutes");
-const adminsRouter = require("./routes/admins");
-const msgRouter = require("./routes/messageRoutes");
-const parkRouter = require("./routes/parkRoutes");
-const postRoutes = require("./routes/postRoutes");
-const usersRouter = require("./routes/users");
-const ticketRouter = require("./routes/ticketRoutes");
+const express = require('express')
+const mongoose = require('mongoose')
+const bookingRouter = require('./backend/routes/bookingRoutes')
+const facilityRouter = require('./backend/routes/amentityRoutes')
+const eventRouter = require('./backend/routes/eventRoutes')
+const adminsRouter = require("./backend/routes/admins");
+const msgRouter = require("./backend/routes/messageRoutes")
+const parkRouter = require("./backend/routes/parkRoutes")
+const postRoutes = require("./backend/routes/postRoutes")
+const usersRouter = require("./backend/routes/users");
+const ticketRouter = require("./backend/routes/ticketRoutes")
+const cors = require('cors')
 
+const Port = process.env.PORT || 3035
 
-require("dotenv").config();
+const app = express()
+app.use(express.json())
 
-
-
-const app = express();
-
-const port = process.env.PORT || 3000;
-
-app.use(express.json());
-const uri = process.env.ATLAS_URI;
-
-app.use("/", bookingRouter);
-app.use("/", facilityRouter);
-app.use("/", eventRouter);
-app.use("/", adminsRouter);
-app.use("/", parkRouter);
-app.use("/", msgRouter);
-app.use("/", postRoutes);
-
-app.use("/user", usersRouter);
-app.use("/", ticketRouter);
+app.use('./routes/bookingRoutes',bookingRouter)
+app.use('./routes/amentityRoutes',facilityRouter)
+app.use('./routes/eventRoutes',eventRouter)
+//app.use('/', adminsRouter);
+app.use('./routes/parkRoutes', parkRouter)
+app.use('./routes/messageRoutes', msgRouter)
+app.use('./routes/postRoutes', postRoutes)
 // app.use("/client",clientsRouter)
-app.use(cors());
+app.use("/routes/user", usersRouter);
+app.use("./routes/ticketRoutes",ticketRouter)
+app.use(cors())
 
+mongoose.Promise = global.Promise
 
-mongoose.Promise = global.Promise;
-
-mongoose.set('strictQuery', false);
-mongoose.connect(uri)
-  .then(() => {
-    console.log("Successfully connected to the database mongoDB Atlas Server");
-  })
-  .catch((err) => {
-    console.log("Could not connect to the database. Exiting now...", err);
+mongoose.connect("mongodb+srv://capstone:Capstone2023@cluster0.vaju5po.mongodb.net/webapp?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("Successfully connected to the database mongoDB Atlas Server");    
+}).catch(err => {
+    console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
-  });
-app.get("/", (req, res) => {
-  res.send("<h1>Welcome to the Park & Recreation App</h1>");
+});
+app.get('/', (req, res) => {
+    res.send("<h1>Welcome to the Park & Recreation App</h1>");
 });
 
-app.listen(port, () => {
-  console.log(`Server is listening on port http://localhost:${port}`);
+
+app.listen(Port, () => {
+    console.log(`Server is listening on port http://localhost:${Port}`);
 });

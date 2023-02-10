@@ -106,6 +106,7 @@ export default function EventTicket({ visible, Onclose }) {
   if (!visible) return null;
   return (
     <div>
+      <form onSubmit={handleSubmit}>
       <div className="fixed inset-0   bg-300 backdrop-blur-sm flex items-center justify-center">
         <div class="flex items-center justify-center p-12">
           <div class="mx-auto w-full max-w-[550px] p-10 bg-white rounded">
@@ -124,6 +125,7 @@ export default function EventTicket({ visible, Onclose }) {
                       name="first_name"
                       id="first_name"
                       value={first_name}
+                      onChange={(e) => setfirst_name(e.target.value)}
                       placeholder="First Name"
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
@@ -142,6 +144,7 @@ export default function EventTicket({ visible, Onclose }) {
                       name="last_name"
                       id="last_name"
                       value={last_name}
+                      onChange={(e) => setlast_name(e.target.value)}
                       placeholder="Last Name"
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
@@ -160,6 +163,7 @@ export default function EventTicket({ visible, Onclose }) {
                   name="number_OfTicket"
                   id="number_OfTicket"
                   value={number_OfTicket}
+                  onChange={(e) => setNumber_OfTicket(e.target.value)}
                   placeholder="5"
                   min="0"
                   class="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -180,6 +184,7 @@ export default function EventTicket({ visible, Onclose }) {
                       name="event_date"
                       id="event_date"
                       value={event_date}
+                      onChange={(e) => setEvent_date(e.target.value)}
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
                   </div>
@@ -197,6 +202,7 @@ export default function EventTicket({ visible, Onclose }) {
                       name="event_time"
                       id="event_time"
                       value={event_time}
+                      onChange={(e) => setEvent_time(e.target.value)}
                       class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                     />
                   </div>
@@ -217,6 +223,7 @@ export default function EventTicket({ visible, Onclose }) {
           </div>
         </div>
       </div>
+      </form>
     </div>
   );
 }
