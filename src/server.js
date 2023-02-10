@@ -16,16 +16,16 @@ const Port = process.env.PORT || 3035
 const app = express()
 app.use(express.json())
 
-app.use('./routes/bookingRoutes',bookingRouter)
-app.use('./routes/amentityRoutes',facilityRouter)
-app.use('./routes/eventRoutes',eventRouter)
-//app.use('/', adminsRouter);
-app.use('./routes/parkRoutes', parkRouter)
-app.use('./routes/messageRoutes', msgRouter)
-app.use('./routes/postRoutes', postRoutes)
+app.use('/',bookingRouter)
+app.use('/',facilityRouter)
+app.use('/',eventRouter)
+app.use('/', adminsRouter);
+app.use('/', parkRouter)
+app.use('/', msgRouter)
+app.use('/', postRoutes)
 // app.use("/client",clientsRouter)
-app.use("/routes/user", usersRouter);
-app.use("./routes/ticketRoutes",ticketRouter)
+app.use("/user", usersRouter);
+app.use("/",ticketRouter)
 app.use(cors())
 
 mongoose.Promise = global.Promise

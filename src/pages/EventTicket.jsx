@@ -180,7 +180,7 @@ export default function EventTicket({ visible, Onclose }) {
                       Date
                     </label>
                     <input
-                      type="event_date"
+                      type="date"
                       name="event_date"
                       id="event_date"
                       value={event_date}
@@ -198,7 +198,7 @@ export default function EventTicket({ visible, Onclose }) {
                       Time
                     </label>
                     <input
-                      type="event_time"
+                      type="time"
                       name="event_time"
                       id="event_time"
                       value={event_time}
