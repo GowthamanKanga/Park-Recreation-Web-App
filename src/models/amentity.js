@@ -1,121 +1,55 @@
-const express = require('express')
-const route = express.Router()
-const amnetity = require('../models/amentity')
+const mongoose = require('mongoose')
 
-route.post('/amenities', async(req, res) => {
-    const newAmentity = req.body;
-    if(JSON.stringify(newAmentity) == null || JSON.stringify(newAmentity) == '{}') {
-        return res.status(400).send({
-            message: "facility's content can not be empty"
-        });
-    }
-    else {
+const Schema = mongoose.Schema;
 
-    try {
-        const item = new amnetity(newAmentity)
-        await item.save()
-        res.status(201).send(item)
-    }
-    catch(error) {
-        res.status(500).send(error)
-    }
-}
-});
+const amentitySchema = new Schema({
 
-route.get('/amenities', async(req, res) => {
-    try {
-        const amentities = await amnetity.find({})
-        res.status(200).send(amentities)
-    }
-    catch(error) {
-        res.status(500).send(error)
-    }
-});
-route.get('/amenities/search', async(req, res) => {
-    let keyword = req.query.keyword
+    amentityName: {
+        
+        type: String,
+        required: true},
+    amentityDescription: String,
 
-    if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
-        return res.status(400).send({
-            message: "Facility's keyword can not be empty"
-        });
-    }
-    else {
-    try {
-        const amentities = await amnetity.find({ $or: [{facilityName: `/^${keyword} `}, {facilityName: `/${keyword} $/`}, {facilityName: `/ ${keyword} /`}
-    , {facilityName: `/^${keyword}`}, {facilityName: `${keyword}$/`}, {facilityName: `/${keyword}/`}]})
-        res.status(200).send(amentities)
-    }
-    catch(error) {
-        res.status(500).send(error)
-    }
-}
-});
+    image: {type: String, required: true},
 
+    /*isAvailable: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
+    */
+    totalAmount: {
+        type: Number,
+        required: true,
+        validate(value) {
+          if(value < 0) {
+            throw new Error("Can not be negative number")
+          }  
+        },
+        default: 0
+    },
+    occupiedAmount: {
+        type: Number,
+        required: true,
 
-route.get('/amenities/:id', async(req, res) => {
-
-    let id = req.params.id
-    if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
-        return res.status(400).send({
-            message: "Facility content can not be empty"
-        });
-    }
-    else {
+        validate(value) {
+            if(value < 0) {
+                throw new Error("Can not be negative number")
+            }
+        },
+        default: 0
+    },
     
-    try {
-        const item = await amentity.findById(id)
-        res.status(200).send(item)
-    }
-    catch(error) {
-        res.status(500).send(error)
-    }
-}
-});
 
-
-route.patch('/amenities/:id', async(req, res) => {
-
-    let id = req.params.id
-    if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
-        return res.status(400).send({
-            message: "Facilities's content can not be empty"
-        });
-    }
-    else {
-    try {
-        console.log(req.body)
-        const updatedInventory = await amnetity.findByIdAndUpdate(id, req.body)
     
-        await updatedInventory.save()
-        res.status(202).send(updatedInventory)
-      } catch (err) {
-        res.status(500).send(err)
-      }
-    }
-});
-
-
-route.delete('/amenities/:id', async (req, res) => {
-    // Validate request
-    let id = req.params.id
-    if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
-        return res.status(400).send({
-            message: "Facilities's content can not be empty"
-        });
-    }
-
-    else {
-    try {
-        const facility = await amnetity.findByIdAndDelete(id)
     
-        if (!facility) { 
-            res.status(404).send("No item found")
-        }
-        res.status(204).send(facility)
-      } catch (err) {
-        res.status(500).send(err)
-      }
-    }
-});
-module.exports = route
 
+})
+
+amentitySchema.virtual("availiableAmount").get(function() {
+    return this.totalAmount - this.occupiedAmount;
+})
+
+const amentityModel = mongoose.model("amentityModel", amentitySchema);
+
+module.exports = amentityModel

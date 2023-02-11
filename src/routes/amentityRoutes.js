@@ -1,6 +1,6 @@
 const express = require('express')
 const route = express.Router()
-const equipment = require('../models/amentity')
+const amentity = require('../models/amentity')
 
 route.post('/amenities', async(req, res) => {
     const newAmentity = req.body;
@@ -12,7 +12,7 @@ route.post('/amenities', async(req, res) => {
     else {
 
     try {
-        const item = new equipment(newAmentity)
+        const item = new amentity(newAmentity)
         await item.save()
         res.status(201).send(item)
     }
@@ -24,15 +24,15 @@ route.post('/amenities', async(req, res) => {
 
 route.get('/amenities', async(req, res) => {
     try {
-        const amentities = await equipment.find({})
+        const amentities = await amentity.find({})
         res.status(200).send(amentities)
     }
     catch(error) {
         res.status(500).send(error)
     }
 });
-route.get('/amenities/', async(req, res) => {
-    let keyword = req.query.keyword
+route.get('/amenities/search', async(req, res) => {
+    let keyword = req.query.keyword.trim()
 
     if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
         return res.status(400).send({
@@ -41,8 +41,16 @@ route.get('/amenities/', async(req, res) => {
     }
     else {
     try {
-        const amentities = await equipment.find({ $or: [{facilityName: `/^${keyword} `}, {facilityName: `/${keyword} $/`}, {facilityName: `/ ${keyword} /`}
-    , {facilityName: `/^${keyword}`}, {facilityName: `${keyword}$/`}, {facilityName: `/${keyword}/`}]})
+        const amentities = await amentity.find({
+            $or: [
+                {amentityName: {$regex: keyword, $options: 'i'}},
+                {amentityName: {$regex: '^' + keyword, $options: 'i'}},
+                {amentityName: {$regex: keyword + '$', $options: 'i'}},
+                {amentityName: {$regex: ' ' + keyword + ' ', $options: 'i'}},
+                {amentityName: {$regex: '^' + keyword + ' ', $options: 'i'}},
+                {amentityName: {$regex: ' ' + keyword + '$', $options: 'i'}}
+              ]
+          });
         res.status(200).send(amentities)
     }
     catch(error) {
@@ -63,7 +71,7 @@ route.get('/amenities/:id', async(req, res) => {
     else {
     
     try {
-        const item = await equipment.findById(id)
+        const item = await amentity.findById(id)
         res.status(200).send(item)
     }
     catch(error) {
@@ -84,7 +92,7 @@ route.patch('/amenities/:id', async(req, res) => {
     else {
     try {
         console.log(req.body)
-        const updatedInventory = await equipment.findByIdAndUpdate(id, req.body)
+        const updatedInventory = await amentity.findByIdAndUpdate(id, req.body)
     
         await updatedInventory.save()
         res.status(202).send(updatedInventory)
@@ -106,7 +114,7 @@ route.delete('/amenities/:id', async (req, res) => {
 
     else {
     try {
-        const facility = await equipment.findByIdAndDelete(id)
+        const facility = await amentity.findByIdAndDelete(id)
     
         if (!facility) { 
             res.status(404).send("No item found")
