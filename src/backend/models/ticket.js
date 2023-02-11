@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const ticketSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: true
     },
     event: {
@@ -32,7 +32,7 @@ const ticketSchema = new mongoose.Schema({
         default: Date.now
     },
 
-    number_OfTicket: {
+    ticket_amount: {
         type: Number,
         required: true,
 

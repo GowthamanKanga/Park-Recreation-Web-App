@@ -40,7 +40,7 @@ router.get('/tickets/:id', async (req, res) => {
 
 router.patch('/tickets/:id', async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['purchase_date', 'number_OfTicket']
+    const allowedUpdates = ['purchase_date', 'ticket_amount']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {

@@ -32,7 +32,7 @@ route.get('/amenities', async(req, res) => {
     }
 });
 route.get('/amenities/search', async(req, res) => {
-    let keyword = req.query.keyword
+    let keyword = req.query.keyword.trim()
 
     if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
         return res.status(400).send({
@@ -41,8 +41,16 @@ route.get('/amenities/search', async(req, res) => {
     }
     else {
     try {
-        const amentities = await amentity.find({ $or: [{facilityName: `/^${keyword} `}, {facilityName: `/${keyword} $/`}, {facilityName: `/ ${keyword} /`}
-    , {facilityName: `/^${keyword}`}, {facilityName: `${keyword}$/`}, {facilityName: `/${keyword}/`}]})
+        const amentities = await amentity.find({
+            $or: [
+                {amentityName: {$regex: keyword, $options: 'i'}},
+                {amentityName: {$regex: '^' + keyword, $options: 'i'}},
+                {amentityName: {$regex: keyword + '$', $options: 'i'}},
+                {amentityName: {$regex: ' ' + keyword + ' ', $options: 'i'}},
+                {amentityName: {$regex: '^' + keyword + ' ', $options: 'i'}},
+                {amentityName: {$regex: ' ' + keyword + '$', $options: 'i'}}
+              ]
+          });
         res.status(200).send(amentities)
     }
     catch(error) {
@@ -118,4 +126,5 @@ route.delete('/amenities/:id', async (req, res) => {
     }
 });
 module.exports = route
+
 

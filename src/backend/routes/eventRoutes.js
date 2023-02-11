@@ -24,14 +24,14 @@ route.post('/events', async(req, res) => {
 
 route.get('/events', async(req, res) => {
     try {
-        const events = await equipment.find({})
+        const events = await event.find({})
         res.status(200).send(events)
     }
     catch(error) {
         res.status(500).send(error)
     }
 });
-route.get('/events/keyword', async(req, res) => {
+route.get('/events/search', async(req, res) => {
     let keyword = req.query.name
 
     if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
@@ -41,8 +41,16 @@ route.get('/events/keyword', async(req, res) => {
     }
     else {
     try {
-        const events = await event.find({ $or: [{title: `/^${keyword} `}, {title: `/${keyword} $/`}, {facilityName: `/ ${keyword} /`}
-    , {facilityName: `/^${keyword}`}, {facilityName: `${keyword}$/`}, {facilityName: `/${keyword}/`}]})
+        const events = await event.find({
+            $or: [
+                {title: {$regex: keyword, $options: 'i'}},
+                {title: {$regex: '^' + keyword, $options: 'i'}},
+                {title: {$regex: keyword + '$', $options: 'i'}},
+                {title: {$regex: ' ' + keyword + ' ', $options: 'i'}},
+                {title: {$regex: '^' + keyword + ' ', $options: 'i'}},
+                {title: {$regex: ' ' + keyword + '$', $options: 'i'}}
+              ]
+          });
         res.status(200).send(events)
     }
     catch(error) {
