@@ -1,8 +1,10 @@
 const express = require('express')
 const route = express.Router()
 const amentity = require('../models/amentity')
+const token = require('../backend/routes/func')
 
-route.post('/amenities', async(req, res) => {
+route.post('/amenities',  token.verifytoken, async(req, res) => {
+    
     const newAmentity = req.body;
     if(JSON.stringify(newAmentity) == null || JSON.stringify(newAmentity) == '{}') {
         return res.status(400).send({
@@ -22,7 +24,8 @@ route.post('/amenities', async(req, res) => {
 }
 });
 
-route.get('/amenities', async(req, res) => {
+route.get('/amenities', token.verifytoken, async(req, res) => {
+    
     try {
         const amentities = await amentity.find({})
         res.status(200).send(amentities)
@@ -31,7 +34,8 @@ route.get('/amenities', async(req, res) => {
         res.status(500).send(error)
     }
 });
-route.get('/amenities/search', async(req, res) => {
+route.get('/amenities/search', token.verifytoken, async(req, res) => {
+    
     let keyword = req.query.keyword.trim()
 
     if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
@@ -60,8 +64,16 @@ route.get('/amenities/search', async(req, res) => {
 });
 
 
-route.get('/amenities/:id', async(req, res) => {
-
+route.get('/amenities/:id', token.verifytoken, async(req, res) => {
+    const authHeader = context.req.headers.authorization;
+    if (!authHeader) {
+        throw new Error('Not authenticated');
+    }
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, SECRET_KEY);
+    if (!decoded) {
+        throw new Error('Not authenticated');
+    }
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
         return res.status(400).send({
@@ -81,8 +93,16 @@ route.get('/amenities/:id', async(req, res) => {
 });
 
 
-route.patch('/amenities/:id', async(req, res) => {
-
+route.patch('/amenities/:id', token.verifytoken, async(req, res) => {
+    const authHeader = context.req.headers.authorization;
+    if (!authHeader) {
+        throw new Error('Not authenticated');
+    }
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, SECRET_KEY);
+    if (!decoded) {
+        throw new Error('Not authenticated');
+    }
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
         return res.status(400).send({
@@ -103,7 +123,8 @@ route.patch('/amenities/:id', async(req, res) => {
 });
 
 
-route.delete('/amenities/:id', async (req, res) => {
+route.delete('/amenities/:id', token.verifytoken,async (req, res) => {
+    
     // Validate request
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {

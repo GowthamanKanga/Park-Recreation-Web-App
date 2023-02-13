@@ -1,10 +1,12 @@
+const { verifytoken } = require('../backend/routes/func');
 const post = require('../models/post')
 
 const express = require('express')
 
 const app = express.Router()
 
-app.post('/posts', (req, res) => {
+app.post('/posts', verifytoken,  async(req, res) => {
+  
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
@@ -12,7 +14,7 @@ app.post('/posts', (req, res) => {
       messages: req.body.messages
     });
   
-    post.save((err) => {
+   await post.save((err) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -21,8 +23,9 @@ app.post('/posts', (req, res) => {
     });
   });
   
-  app.get('/posts', (req, res) => {
-    post.find({}, (err, posts) => {
+  app.get('/posts', verifytoken, async(req, res) => {
+   
+    await post.find({}, (err, posts) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -31,8 +34,9 @@ app.post('/posts', (req, res) => {
     });
   });
   
-  app.patch('/posts/:id', (req, res) => {
-    post.findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, content: req.body.content}}, (err) => {
+  app.patch('/posts/:id', verifytoken, async(req, res) => {
+   
+    await post.findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, content: req.body.content}}, (err) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -41,8 +45,9 @@ app.post('/posts', (req, res) => {
     });
   });
   
-  app.delete('/posts/:id', (req, res) => {
-    post.findByIdAndDelete(req.params.id, (err) => {
+  app.delete('/posts/:id', verifytoken, async(req, res) => {
+    
+   await post.findByIdAndDelete(req.params.id, (err) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -62,8 +67,9 @@ app.post('/posts', (req, res) => {
     })
 })*/
 
-app.get('/posts/:id', (req, res) => {
-  post.findById(req.params.id, (err, post) => {
+app.get('/posts/:id', verifytoken, async(req, res) => {
+ 
+ await post.findById(req.params.id, (err, post) => {
     if (err) {
       res.status(500).send(err);
     } else if (!post) {

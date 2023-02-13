@@ -1,8 +1,10 @@
 const express = require('express')
 const route = express.Router()
-const park = require('../models/park')
+const park = require('../models/park');
+const { verifytoken } = require('../backend/routes/func');
 
-route.post('/parks', async(req, res) => {
+route.post('/parks',verifytoken, async(req, res) => {
+  
     const newPark = req.body;
     if(JSON.stringify(newPark) == null || JSON.stringify(newPark) == '{}') {
         return res.status(400).send({
@@ -22,7 +24,8 @@ route.post('/parks', async(req, res) => {
 }
 });
 
-route.get('/parks', async(req, res) => {
+route.get('/parks',verifytoken, async(req, res) => {
+    
     try {
         const parks = await park.find({})
         res.status(200).send(parks)
@@ -31,7 +34,8 @@ route.get('/parks', async(req, res) => {
         res.status(500).send(error)
     }
 });
-route.get('/parks/search', async(req, res) => {
+route.get('/parks/search', verifytoken, async(req, res) => {
+    
     let keyword = req.query.name
 
     if(JSON.stringify(keyword) == null || JSON.stringify(keyword) == '{}') {
@@ -60,8 +64,8 @@ route.get('/parks/search', async(req, res) => {
 });
 
 
-route.get('/parks/:id', async(req, res) => {
-
+route.get('/parks/:id', verifytoken, async(req, res) => {
+    
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
         return res.status(400).send({
@@ -81,8 +85,8 @@ route.get('/parks/:id', async(req, res) => {
 });
 
 
-route.patch('/parks/:id', async(req, res) => {
-
+route.patch('/parks/:id', verifytoken, async(req, res) => {
+  
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
         return res.status(400).send({
@@ -103,7 +107,8 @@ route.patch('/parks/:id', async(req, res) => {
 });
 
 
-route.delete('/parks/:id', async (req, res) => {
+route.delete('/parks/:id', verifytoken, async (req, res) => {
+    
     // Validate request
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {

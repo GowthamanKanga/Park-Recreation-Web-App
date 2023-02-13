@@ -1,9 +1,10 @@
 const express = require('express')
 const route = express.Router()
 const order = require('../models/booking')
+const token = require('../backend/routes/func')
 
-route.post('/bookings/add', async(req, res) => {
-
+route.post('/bookings/add', token.verifytoken,  async(req, res) => {
+   
     const newBooking = req.body;
     if(JSON.stringify(newBooking) == null || JSON.stringify(newBooking) == '{}') {
         return res.status(400).send({
@@ -24,7 +25,8 @@ route.post('/bookings/add', async(req, res) => {
 });
 
 
-route.get('/bookings', async(req, res) => {
+route.get('/bookings', token.verifytoken,async(req, res) => {
+    
     try {
         const bookings = await order.find({})
         res.status(200).send(bookings)
@@ -36,7 +38,8 @@ route.get('/bookings', async(req, res) => {
 
 
 
-route.get('/bookings/:id', async(req, res) => {
+route.get('/bookings/:id', token.verifytoken, async(req, res) => {
+    
     // Validate request
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
@@ -57,8 +60,8 @@ route.get('/bookings/:id', async(req, res) => {
 });
 
 
-route.patch('/bookings/:id', async(req, res) => {
-
+route.patch('/bookings/:id', token.verifytoken,async(req, res) => {
+    
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
         return res.status(400).send({
@@ -79,8 +82,8 @@ route.patch('/bookings/:id', async(req, res) => {
 });
 
 
-route.delete('/bookings/:id', async (req, res) => {
- 
+route.delete('/bookings/:id', token.verifytoken, async (req, res) => {
+
     let id = req.params.id
     if(JSON.stringify(id) == null || JSON.stringify(id) == '{}') {
         return res.status(400).send({
