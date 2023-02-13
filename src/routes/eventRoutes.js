@@ -82,7 +82,7 @@ route.get('/events/date', verifytoken, async(req, res) => {
 }
 });
 route.get('/events/date-range', verifytoken, async(req, res) => {
-    const authHeader = context.req.headers.authorization;
+  
             if (!authHeader) {
                 throw new Error('Not authenticated');
             }
@@ -113,7 +113,7 @@ route.get('/events/date-range', verifytoken, async(req, res) => {
 
 
 route.get('/events/:id', verifytoken, async(req, res) => {
-    const authHeader = context.req.headers.authorization;
+
             if (!authHeader) {
                 throw new Error('Not authenticated');
             }
@@ -143,7 +143,7 @@ route.get('/events/:id', verifytoken, async(req, res) => {
 
 
 route.patch('/events/:id', verifytoken, async(req, res) => {
-    const authHeader = context.req.headers.authorization;
+
             if (!authHeader) {
                 throw new Error('Not authenticated');
             }
@@ -174,7 +174,7 @@ route.patch('/events/:id', verifytoken, async(req, res) => {
 
 
 route.delete('/events/:id', verifytoken, async (req, res) => {
-    const authHeader = context.req.headers.authorization;
+   
     
     // Validate request
     let id = req.params.id
